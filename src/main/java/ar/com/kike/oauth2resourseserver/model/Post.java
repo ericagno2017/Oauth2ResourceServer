@@ -31,6 +31,7 @@ public class Post extends BackEndEntity {
 
     @OneToMany(
             mappedBy = "post",
+            fetch = FetchType.LAZY,
             orphanRemoval = true
     )
     @JsonProperty("comentarios")

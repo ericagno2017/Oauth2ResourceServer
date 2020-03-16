@@ -4,9 +4,9 @@ package ar.com.kike.oauth2resourseserver.rest;
 import ar.com.kike.oauth2resourseserver.common.PageRequest;
 import ar.com.kike.oauth2resourseserver.common.PageResponse;
 import ar.com.kike.oauth2resourseserver.model.Post;
+import ar.com.kike.oauth2resourseserver.model.PostDto;
 import ar.com.kike.oauth2resourseserver.service.PostService;
 import ar.com.kike.oauth2resourseserver.utils.AppConstants;
-import ar.com.kike.oauth2resourseserver.webtesting.dto.Normal;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
@@ -40,25 +40,25 @@ public class PostRestController {
     public ResponseEntity<?> getPostByUSer(
             @ApiParam(value = "User id to obtain Posts", example = "1")@PathVariable Long id){
         if(id == null) return ResponseEntity.badRequest().build();
-        List<Post> postList = postService.getPostListByUser(id);
+        List<PostDto> postList = postService.getPostListByUser(id);
         if (postList.size() > 0) return new ResponseEntity<>(postList, getHeadersOk(), HttpStatus.OK);
         return ResponseEntity.notFound().build();
     }
 
     @PostMapping("/posts/paged")
-    @ApiOperation(value = "getPostPagedByUser", notes = "Allows to get all the posts from a given list of Users in a Paged way", response = ResponseEntity.class)
+    @ApiOperation(value = "getPostPagedByPost", notes = "Allows to get all the posts from a given list of Post in a Paged way", response = ResponseEntity.class)
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Error interno del sistema => Ver code y message lanzados"),
             @ApiResponse(code = 401, message = "Usuario no autenticado"),
             @ApiResponse(code = 403, message = "Usuario no autorizado")})
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public ResponseEntity<?> getPostPagedByUser(
+    public ResponseEntity<?> getPostPagedByPost(
             @ApiParam(value = "nro de pagina a devolver") @RequestParam(value = "page-number", required = false, defaultValue = "0") String pageNumber,
             @ApiParam(value = "cantidad de resultados a devolver") @RequestParam(value = "page-size", required = false, defaultValue = AppConstants.DEFAULT_PAGE_SIZE) String pageSize,
             @RequestBody List<Long> listaPost){
 
         if (listaPost== null) return ResponseEntity.badRequest().build();
-        PageResponse<Post> page = postService.getPostPagedListByUser(new PageRequest(Integer.valueOf(pageNumber), Integer.valueOf(pageSize)),listaPost);
+        PageResponse<Post> page = postService.getPostPagedListByPost(new PageRequest(Integer.valueOf(pageNumber), Integer.valueOf(pageSize)),listaPost);
         return new ResponseEntity<>(page, getHeadersOk(), HttpStatus.OK);
         //return ResponseEntity.notFound().build();
     }

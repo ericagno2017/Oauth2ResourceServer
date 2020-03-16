@@ -1,9 +1,9 @@
 package ar.com.kike.oauth2resourseserver.repository;
 
 import ar.com.kike.oauth2resourseserver.model.Post;
+import ar.com.kike.oauth2resourseserver.model.PostDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -16,15 +16,13 @@ import java.util.List;
 public interface PostRespository  extends PagingAndSortingRepository<Post, String>,
         JpaSpecificationExecutor<Post> {
 
-    Post findById(Long id);
-    List<Post> findAllByUserId(Long id);
+   // List<Post> findAllByUserId(Long id);
 
-    @Override
-    List<Post> findAll(Specification<Post> specification);
+    @Query("SELECT new ar.com.kike.oauth2resourseserver.model.PostDto(p.id, p.title, p.userId) " +
+            "FROM Post p WHERE p.userId = :id")
+    List<PostDto> findAllByUserId(Long id);
 
-    @Query("SELECT p FROM Post p WHERE p.userId IN (:userIds)")
-    List<Post> findByUsersId(@Param("userIds") List<Long> userIds);
+    @Query("SELECT p FROM Post p WHERE p.id IN (:ids)")
+    Page<Post> findByPostIdPage(@Param("ids") List<Long> ids, Pageable pageable);
 
-    @Query("SELECT p FROM Post p WHERE p.userId IN (:userIds)")
-    Page<Post> findByUsersIdPage(@Param("userIds") List<Long> userIds, Pageable pageable);
 }
