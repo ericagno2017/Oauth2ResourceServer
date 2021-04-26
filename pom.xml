@@ -22,7 +22,7 @@
         <oauth-autoconfig.version>2.1.3.RELEASE</oauth-autoconfig.version>
 
         <!-- util -->
-        <commons-io.version>2.6</commons-io.version>
+        <commons-io.version>2.7</commons-io.version>
         <java.version>1.8</java.version>
 
         <postgresql.version>9.4.1211</postgresql.version>
